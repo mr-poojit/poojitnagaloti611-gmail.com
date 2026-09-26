@@ -71,12 +71,71 @@ export function issueAccessToken({ userId, orgId, role, permVersion }, secret) {
 // `node scripts/check-jwt.js` is the public test suite for this function.
 // ---------------------------------------------------------------------------
 export function verifyAccessToken(token, secret) {
-  // YOURS TO WRITE. Every failure mode listed above must be a 401 UNAUTHENTICATED.
-  // `node scripts/check-jwt.js` is the public suite for this function.
-  throw Object.assign(
-    new Error('TODO: server/auth.js — verifyAccessToken() is yours to write (AUTH-DATA-MODEL.md §10).'),
-    { code: 'NOT_IMPLEMENTED' }
-  );
+  // 1. Must be three dot-separated segments
+  if (typeof token !== 'string' || !token) throw unauthenticated('malformed token');
+  const parts = token.split('.');
+  if (parts.length !== 3) throw unauthenticated('malformed token');
+
+  const [hRaw, pRaw, sRaw] = parts;
+
+  // 2. Header must be valid base64url-encoded JSON object
+  let header;
+  try {
+    const decoded = unb64(hRaw).toString('utf8');
+    header = JSON.parse(decoded);
+    if (header === null || typeof header !== 'object' || Array.isArray(header)) {
+      throw unauthenticated('header is not a JSON object');
+    }
+  } catch (e) {
+    if (e.status === 401) throw e;
+    throw unauthenticated('header is not valid JSON');
+  }
+
+  // 3. Algorithm pinning: alg must be HS256, typ must be JWT
+  if (header.alg !== ALG) throw unauthenticated('unsupported algorithm');
+  if (header.typ !== 'JWT') throw unauthenticated('unsupported token type');
+
+  // 2b. Payload must be valid base64url-encoded JSON
+  let payload;
+  try {
+    const decoded = unb64(pRaw).toString('utf8');
+    payload = JSON.parse(decoded);
+    if (payload === null || typeof payload !== 'object' || Array.isArray(payload)) {
+      throw unauthenticated('payload is not a JSON object');
+    }
+  } catch (e) {
+    if (e.status === 401) throw e;
+    throw unauthenticated('payload is not valid JSON');
+  }
+
+  // 4. Constant-time signature verification
+  const expectedSig = createHmac('sha256', secret).update(`${hRaw}.${pRaw}`).digest();
+  let actualSig;
+  try {
+    actualSig = unb64(sRaw);
+  } catch {
+    throw unauthenticated('signature is not valid base64url');
+  }
+  if (actualSig.length !== expectedSig.length ||
+      !timingSafeEqual(actualSig, expectedSig)) {
+    throw unauthenticated('signature mismatch');
+  }
+
+  // 5. Expiry: exp must exist, be a number, and > now (half-open: exp <= now is expired)
+  const now = Math.floor(Date.now() / 1000);
+  if (payload.exp === undefined || payload.exp === null || typeof payload.exp !== 'number') {
+    throw unauthenticated('missing or invalid exp');
+  }
+  if (payload.exp <= now) throw unauthenticated('token expired');
+
+  // 6. Issuer and audience
+  if (payload.iss !== ISS) throw unauthenticated('invalid issuer');
+  if (payload.aud !== AUD) throw unauthenticated('invalid audience');
+
+  // 7. JTI must be present and non-empty
+  if (!payload.jti) throw unauthenticated('missing jti');
+
+  return payload;
 }
 
 
