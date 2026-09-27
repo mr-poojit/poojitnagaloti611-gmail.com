@@ -1,0 +1,12 @@
+{
+  "name": "remoteops-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix starter run dev",
+    "build": "npm --prefix starter run build",
+    "start": "npm --prefix starter start",
+    "test": "npm --prefix starter test",
+    "db:reset": "npm --prefix starter run db:reset",
+    "db:load": "npm --prefix starter run db:load"
+  }
+}
