@@ -394,6 +394,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
 }
 
 .data-table td {
@@ -401,6 +402,7 @@ body {
   border-bottom: 1px solid var(--border-subtle);
   font-size: 0.9rem;
   color: var(--text-main);
+  vertical-align: middle;
 }
 
 .data-table tr:last-child td {
@@ -411,12 +413,16 @@ body {
   background: rgba(255, 255, 255, 0.02);
 }
 
-.actions-cell {
-  display: flex;
+.data-table td.actions-cell {
+  text-align: right;
+  vertical-align: middle;
+}
+
+.actions-wrapper {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   justify-content: flex-end;
-  flex-wrap: wrap;
 }
 
 /* Status Badges */

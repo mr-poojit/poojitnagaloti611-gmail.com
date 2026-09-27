@@ -600,102 +600,104 @@ export function App() {
                               </span>
                             </td>
                             <td className="actions-cell">
-                              {dp['device:view']?.effect === 'allow' && (
-                                <button
-                                  data-testid="start-view"
-                                  data-permission="device:view"
-                                  data-state="unlocked"
-                                  className="btn-secondary"
-                                  onClick={async () => {
-                                    await apiCall('POST', `/v1/orgs/${auth.orgId}/sessions`, {
-                                      deviceId: device.id,
-                                      mode: 'view',
-                                    });
-                                    alert('View session started');
-                                  }}
-                                >
-                                  View
-                                </button>
-                              )}
-                              {dp['device:control']?.effect === 'allow' && (
-                                <button
-                                  data-testid="start-control"
-                                  data-permission="device:control"
-                                  data-state="unlocked"
-                                  className="btn-secondary"
-                                  onClick={async () => {
-                                    await apiCall('POST', `/v1/orgs/${auth.orgId}/sessions`, {
-                                      deviceId: device.id,
-                                      mode: 'control',
-                                    });
-                                    alert('Control session started');
-                                  }}
-                                >
-                                  Control
-                                </button>
-                              )}
-                              {dp['device:terminal']?.effect === 'allow' && (
-                                <button
-                                  data-testid="start-terminal"
-                                  data-permission="device:terminal"
-                                  data-state="unlocked"
-                                  className="btn-secondary"
-                                  onClick={async () => {
-                                    await apiCall('POST', `/v1/orgs/${auth.orgId}/sessions`, {
-                                      deviceId: device.id,
-                                      mode: 'terminal',
-                                    });
-                                    alert('Terminal session started');
-                                  }}
-                                >
-                                  Terminal
-                                </button>
-                              )}
-                              {dp['device:file_transfer']?.effect === 'allow' && (
-                                <button
-                                  data-testid="transfer-files"
-                                  data-permission="device:file_transfer"
-                                  data-state="unlocked"
-                                  className="btn-secondary"
-                                >
-                                  Transfer
-                                </button>
-                              )}
-                              {dp['device:update']?.effect === 'allow' && (
-                                <button
-                                  data-testid="rename-device"
-                                  data-permission="device:update"
-                                  data-state="unlocked"
-                                  className="btn-secondary"
-                                  onClick={async () => {
-                                    const newName = window.prompt('New name:', device.name);
-                                    if (newName) {
-                                      await apiCall('PATCH', `/v1/orgs/${auth.orgId}/devices/${device.id}`, {
-                                        name: newName,
+                              <div className="actions-wrapper">
+                                {dp['device:view']?.effect === 'allow' && (
+                                  <button
+                                    data-testid="start-view"
+                                    data-permission="device:view"
+                                    data-state="unlocked"
+                                    className="btn-secondary"
+                                    onClick={async () => {
+                                      await apiCall('POST', `/v1/orgs/${auth.orgId}/sessions`, {
+                                        deviceId: device.id,
+                                        mode: 'view',
                                       });
-                                      fetchData();
-                                    }
-                                  }}
-                                >
-                                  Rename
-                                </button>
-                              )}
-                              {dp['device:provision']?.effect === 'allow' && (
-                                <button
-                                  data-testid="decommission-device"
-                                  data-permission="device:provision"
-                                  data-state="unlocked"
-                                  className="btn-danger"
-                                  onClick={async () => {
-                                    if (window.confirm(`Decommission ${device.name}?`)) {
-                                      await apiCall('DELETE', `/v1/orgs/${auth.orgId}/devices/${device.id}`);
-                                      fetchData();
-                                    }
-                                  }}
-                                >
-                                  Decommission
-                                </button>
-                              )}
+                                      alert('View session started');
+                                    }}
+                                  >
+                                    View
+                                  </button>
+                                )}
+                                {dp['device:control']?.effect === 'allow' && (
+                                  <button
+                                    data-testid="start-control"
+                                    data-permission="device:control"
+                                    data-state="unlocked"
+                                    className="btn-secondary"
+                                    onClick={async () => {
+                                      await apiCall('POST', `/v1/orgs/${auth.orgId}/sessions`, {
+                                        deviceId: device.id,
+                                        mode: 'control',
+                                      });
+                                      alert('Control session started');
+                                    }}
+                                  >
+                                    Control
+                                  </button>
+                                )}
+                                {dp['device:terminal']?.effect === 'allow' && (
+                                  <button
+                                    data-testid="start-terminal"
+                                    data-permission="device:terminal"
+                                    data-state="unlocked"
+                                    className="btn-secondary"
+                                    onClick={async () => {
+                                      await apiCall('POST', `/v1/orgs/${auth.orgId}/sessions`, {
+                                        deviceId: device.id,
+                                        mode: 'terminal',
+                                      });
+                                      alert('Terminal session started');
+                                    }}
+                                  >
+                                    Terminal
+                                  </button>
+                                )}
+                                {dp['device:file_transfer']?.effect === 'allow' && (
+                                  <button
+                                    data-testid="transfer-files"
+                                    data-permission="device:file_transfer"
+                                    data-state="unlocked"
+                                    className="btn-secondary"
+                                  >
+                                    Transfer
+                                  </button>
+                                )}
+                                {dp['device:update']?.effect === 'allow' && (
+                                  <button
+                                    data-testid="rename-device"
+                                    data-permission="device:update"
+                                    data-state="unlocked"
+                                    className="btn-secondary"
+                                    onClick={async () => {
+                                      const newName = window.prompt('New name:', device.name);
+                                      if (newName) {
+                                        await apiCall('PATCH', `/v1/orgs/${auth.orgId}/devices/${device.id}`, {
+                                          name: newName,
+                                        });
+                                        fetchData();
+                                      }
+                                    }}
+                                  >
+                                    Rename
+                                  </button>
+                                )}
+                                {dp['device:provision']?.effect === 'allow' && (
+                                  <button
+                                    data-testid="decommission-device"
+                                    data-permission="device:provision"
+                                    data-state="unlocked"
+                                    className="btn-danger"
+                                    onClick={async () => {
+                                      if (window.confirm(`Decommission ${device.name}?`)) {
+                                        await apiCall('DELETE', `/v1/orgs/${auth.orgId}/devices/${device.id}`);
+                                        fetchData();
+                                      }
+                                    }}
+                                  >
+                                    Decommission
+                                  </button>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         );
@@ -792,40 +794,42 @@ export function App() {
                           </span>
                         </td>
                         <td className="actions-cell">
-                          {perms['user:remove']?.effect === 'allow' && (
-                            <>
-                              <button
-                                data-testid="suspend-user"
-                                data-permission="user:remove"
-                                data-state="unlocked"
-                                className="btn-secondary"
-                                onClick={async () => {
-                                  if (member.status === 'suspended') {
-                                    await apiCall('DELETE', `/v1/orgs/${auth.orgId}/members/${member.user_id}/suspend`);
-                                  } else {
-                                    await apiCall('POST', `/v1/orgs/${auth.orgId}/members/${member.user_id}/suspend`);
-                                  }
-                                  fetchData();
-                                }}
-                              >
-                                {member.status === 'suspended' ? 'Reinstate' : 'Suspend'}
-                              </button>
-                              <button
-                                data-testid="remove-user"
-                                data-permission="user:remove"
-                                data-state="unlocked"
-                                className="btn-danger"
-                                onClick={async () => {
-                                  if (window.confirm(`Remove member?`)) {
-                                    await apiCall('DELETE', `/v1/orgs/${auth.orgId}/members/${member.user_id}`);
+                          <div className="actions-wrapper">
+                            {perms['user:remove']?.effect === 'allow' && (
+                              <>
+                                <button
+                                  data-testid="suspend-user"
+                                  data-permission="user:remove"
+                                  data-state="unlocked"
+                                  className="btn-secondary"
+                                  onClick={async () => {
+                                    if (member.status === 'suspended') {
+                                      await apiCall('DELETE', `/v1/orgs/${auth.orgId}/members/${member.user_id}/suspend`);
+                                    } else {
+                                      await apiCall('POST', `/v1/orgs/${auth.orgId}/members/${member.user_id}/suspend`);
+                                    }
                                     fetchData();
-                                  }
-                                }}
-                              >
-                                Remove
-                              </button>
-                            </>
-                          )}
+                                  }}
+                                >
+                                  {member.status === 'suspended' ? 'Reinstate' : 'Suspend'}
+                                </button>
+                                <button
+                                  data-testid="remove-user"
+                                  data-permission="user:remove"
+                                  data-state="unlocked"
+                                  className="btn-danger"
+                                  onClick={async () => {
+                                    if (window.confirm(`Remove member?`)) {
+                                      await apiCall('DELETE', `/v1/orgs/${auth.orgId}/members/${member.user_id}`);
+                                      fetchData();
+                                    }
+                                  }}
+                                >
+                                  Remove
+                                </button>
+                              </>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1016,22 +1020,24 @@ export function App() {
                           {grant.userId}
                         </td>
                         <td className="actions-cell">
-                          {perms['grant:revoke']?.effect === 'allow' && (
-                            <button
-                              data-testid="revoke-grant"
-                              data-permission="grant:revoke"
-                              data-state="unlocked"
-                              className="btn-danger"
-                              onClick={async () => {
-                                if (window.confirm('Revoke this grant?')) {
-                                  await apiCall('DELETE', `/v1/orgs/${auth.orgId}/grants/${grant.id}`);
-                                  fetchData();
-                                }
-                              }}
-                            >
-                              Revoke
-                            </button>
-                          )}
+                          <div className="actions-wrapper">
+                            {perms['grant:revoke']?.effect === 'allow' && (
+                              <button
+                                data-testid="revoke-grant"
+                                data-permission="grant:revoke"
+                                data-state="unlocked"
+                                className="btn-danger"
+                                onClick={async () => {
+                                  if (window.confirm('Revoke this grant?')) {
+                                    await apiCall('DELETE', `/v1/orgs/${auth.orgId}/grants/${grant.id}`);
+                                    fetchData();
+                                  }
+                                }}
+                              >
+                                Revoke
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1112,18 +1118,20 @@ export function App() {
                             {session.started_at ? new Date(session.started_at).toLocaleTimeString() : '-'}
                           </td>
                           <td className="actions-cell">
-                            {canStop && (
-                              <button
-                                data-testid="stop-session"
-                                className="btn-danger"
-                                onClick={async () => {
-                                  await apiCall('DELETE', `/v1/sessions/${session.id}`);
-                                  fetchData();
-                                }}
-                              >
-                                End Session
-                              </button>
-                            )}
+                            <div className="actions-wrapper">
+                              {canStop && (
+                                <button
+                                  data-testid="stop-session"
+                                  className="btn-danger"
+                                  onClick={async () => {
+                                    await apiCall('DELETE', `/v1/sessions/${session.id}`);
+                                    fetchData();
+                                  }}
+                                >
+                                  End Session
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       );
