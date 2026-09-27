@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "node --watch-path=./server --watch server/index.js",
     "build": "vite build",
-    "start": "NODE_ENV=production node server/index.js",
-    "db:reset": "rm -f app.db app.db-wal app.db-shm && npm run db:load",
+    "start": "node -e \"process.env.NODE_ENV='production'; import('./server/index.js')\"",
+    "db:reset": "node scripts/load-db.js",
     "db:load": "node scripts/load-db.js",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
